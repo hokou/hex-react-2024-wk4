@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react"
 import axios from "axios"
 import { Modal } from "bootstrap";
+import Pagination from "../components/Pagination";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 const API_PATH = import.meta.env.VITE_API_PATH;
@@ -254,30 +255,8 @@ function ProductPage() {
               </tbody>
             </table>
           </div>
-          <div className="d-flex justify-content-center">
-            <nav>
-              <ul className="pagination">
-                <li className={`page-item ${!pageInfo.has_pre && 'disabled'}`}>
-                  <a onClick={() => handlePageChange(pageInfo.current_page - 1)} className="page-link" href="#">
-                    上一頁
-                  </a>
-                </li>
-                {Array.from({ length: pageInfo.total_pages }).map((_, index) => (
-                  <li key={index} className={`page-item ${pageInfo.current_page === index + 1 && 'active'}`}>
-                    <a onClick={() => handlePageChange(index + 1)} className="page-link" href="#">
-                      {index + 1}
-                    </a>
-                  </li>
-                ))}
-                <li className={`page-item ${!pageInfo.has_next && 'disabled'}`}>
-                  <a onClick={() => handlePageChange(pageInfo.current_page + 1)} className="page-link" href="#">
-                    下一頁
-                  </a>
-                </li>
-              </ul>
-            </nav>
-          </div>
         </div>
+        <Pagination pageInfo={pageInfo} handlePageChange={handlePageChange}></Pagination>
       </div>
       <div ref={productRef} id="productModal" className="modal" style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
         <div className="modal-dialog modal-dialog-centered modal-xl">
