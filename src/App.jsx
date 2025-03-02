@@ -27,6 +27,9 @@ function App() {
     password: "example"
   })
 
+  const [pageInfo, setPageInfo] = useState({});
+
+
   const handleInputChange = (e) => {
     const { name, value } = e.target
     setAccount({
@@ -35,12 +38,13 @@ function App() {
     })
   }
 
-  const getProducts = async () => {
+  const getProducts = async (page = 1) => {
     try {
       const res = await axios.get(
-        `${BASE_URL}/v2/api/${API_PATH}/admin/products`
+        `${BASE_URL}/v2/api/${API_PATH}/admin/products?page=${page}`
       );
       setProducts(res.data.products);
+      setPageInfo(res.data.pagination);
     } catch (error) {
       alert("取得產品失敗");
       console.error(error);
@@ -233,6 +237,9 @@ function App() {
       console.error(error);
     }
   };
+  const handlePageChange = (page) => {
+    getProducts(page);
+  }
 
   return (
     <>
@@ -271,6 +278,29 @@ function App() {
               ))}
             </tbody>
           </table>
+        </div>
+        <div className="d-flex justify-content-center">
+          <nav>
+            <ul className="pagination">
+              <li className={`page-item ${!pageInfo.has_pre && 'disabled'}`}>
+                <a onClick={() => handlePageChange(pageInfo.current_page - 1)} className="page-link" href="#">
+                  上一頁
+                </a>
+              </li>
+              {Array.from({ length: pageInfo.total_pages }).map((_, index) => (
+                <li key={index} className={`page-item ${pageInfo.current_page === index + 1 && 'active'}`}>
+                  <a onClick={() => handlePageChange(index + 1)} className="page-link" href="#">
+                    {index + 1}
+                  </a>
+                </li>
+              ))}
+              <li className={`page-item ${!pageInfo.has_next && 'disabled'}`}>
+                <a onClick={() => handlePageChange(pageInfo.current_page + 1)} className="page-link" href="#">
+                  下一頁
+                </a>
+              </li>
+            </ul>
+          </nav>
         </div>
       </div>
     </div>
