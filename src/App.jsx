@@ -289,7 +289,7 @@ function App() {
         </div>
       </div>
     </div>
-    ) : <LoginPage getProducts={getProducts}/>}
+    ) : <LoginPage setIsAuth={setIsAuth}/>}
 
       <div ref={productRef} id="productModal" className="modal" style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
         <div className="modal-dialog modal-dialog-centered modal-xl">
