@@ -1,9 +1,9 @@
-import { useState} from "react"
+import { useState, useEffect } from "react"
 import axios from "axios"
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
-function LoginPage({getProducts}) {
+function LoginPage({setIsAuth}) {
 
   const [account, setAccount] = useState({
     username: "example@test.com",
@@ -29,14 +29,31 @@ function LoginPage({getProducts}) {
 
       axios.defaults.headers.common["Authorization"] = token;
 
-      getProducts();
-
       setIsAuth(true);
     } catch (error) {
       alert("登入失敗");
       console.error(error);
     }
   };
+
+  const checkUserLogin = async () => {
+    try {
+      await axios.post(`${BASE_URL}/v2/api/user/check`);
+      setIsAuth(true);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  useEffect(() => {
+    const token = document.cookie.replace(
+      /(?:(?:^|.*;\s*)hexToken\s*\=\s*([^;]*).*$)|^.*$/,
+      "$1",
+    );
+    axios.defaults.headers.common["Authorization"] = token;
+
+    checkUserLogin();
+  }, []);
 
   return (
     <div className="d-flex flex-column justify-content-center align-items-center vh-100">
